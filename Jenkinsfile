@@ -34,11 +34,34 @@ pipeline {
         }
     }
     post {
-        success {
-            echo 'Pipeline succeeded!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
+    success {
+        echo 'Pipeline succeeded!'
+        emailext(
+            to: 'emmpower.2008@gmail.com',
+            subject: "SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}",
+            body: """
+                Build Succeeded!
+                Job: ${JOB_NAME}
+                Build: #${BUILD_NUMBER}
+                URL: ${BUILD_URL}
+            """
+        )
     }
+    failure {
+        echo 'Pipeline failed!'
+        emailext(
+            to: 'emmpower.2008@gmail.com',
+            subject: "FAILED: ${JOB_NAME} #${BUILD_NUMBER}",
+            body: """
+                Build Failed!
+                Job: ${JOB_NAME}
+                Build: #${BUILD_NUMBER}
+                URL: ${BUILD_URL}
+            """
+        )
+    }
+    always {
+        sh 'rm -rf venv'
+    }
+}
 }
