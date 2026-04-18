@@ -4,20 +4,12 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import importlib
-app_module = importlib.import_module('app')
-
-flask_app = None
-for name in dir(app_module):
-    obj = getattr(app_module, name)
-    if hasattr(obj, 'test_client'):
-        flask_app = obj
-        break
+from app import app
 
 @pytest.fixture
 def client():
-    flask_app.config['TESTING'] = True
-    with flask_app.test_client() as client:
+    app.config['TESTING'] = True
+    with app.test_client() as client:
         yield client
 
 def test_health(client):
@@ -25,9 +17,9 @@ def test_health(client):
     assert response.status_code == 200
 
 def test_get_items(client):
-    response = client.get('/items')
+    response = client.get('/api/items')
     assert response.status_code == 200
 
 def test_add_item(client):
-    response = client.post('/items', json={"name": "test item"})
-    assert response.status_code in [200, 201]
+    response = client.post('/api/items', json={"name": "test item"})
+    assert response.status_code == 201
