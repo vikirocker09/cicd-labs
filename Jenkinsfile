@@ -28,6 +28,7 @@ pipeline {
         stage('Deploy') {
             when { branch 'main' }
             steps {
+                echo "current branch: ${env.BRANCH_NAME}"
                 echo 'Tests passed - Deploying to staging...'
                 sh 'echo Deployment step here'
             }
