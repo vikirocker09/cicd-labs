@@ -4,7 +4,15 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import app as flask_app
+import importlib
+app_module = importlib.import_module('app')
+
+flask_app = None
+for name in dir(app_module):
+    obj = getattr(app_module, name)
+    if hasattr(obj, 'test_client'):
+        flask_app = obj
+        break
 
 @pytest.fixture
 def client():
