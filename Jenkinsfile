@@ -2,6 +2,8 @@ pipeline {
     agent any
     environment {
         VENV_DIR        = 'venv'
+        STAGING_HOST    = '172.31.39.230'
+        DEPLOY_USER     = 'staging'
         EMAIL_RECIPIENT = 'emmpower.2008@gmail.com'
     }
     stages {
